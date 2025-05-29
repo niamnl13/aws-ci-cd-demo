@@ -15,15 +15,15 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          echo "${{ secrets.EC2_KEY }}" | base64 --decode > ec2-CI-CD-key.pem
-          chmod 600 ec2-CI-CD-key.pem
+          echo "${{ secrets.EC2_KEY }}" | base64 --decode > ec2-key.pem
+          chmod 600 ec2-key.pem
 
       - name: Upload index.html to EC2 (/tmp)
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ./ec2-CI-CD-key.pem
+          key: ./ec2-key.pem
           source: "index.html"
           target: "/tmp"
 
@@ -32,6 +32,6 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ./ec2-CI-CD-key.pem
+          key: ./ec2-key.pem
           script: |
             sudo mv /tmp/index.html /var/www/html/index.html
